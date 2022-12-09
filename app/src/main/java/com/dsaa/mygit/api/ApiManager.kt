@@ -1,16 +1,21 @@
 package com.dsaa.mygit.api
 
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+@Module
+@InstallIn(SingletonComponent::class)
 class ApiManager {
     private val retrofit: Retrofit
     private val okHttpClient =
         OkHttpClient.Builder().addInterceptor(JSONHeaderInterceptor()).build()
-    private val baseUrl = "https://api.github.com"
+    private val baseUrl = "https://api.github.com/"
 
     init {
 

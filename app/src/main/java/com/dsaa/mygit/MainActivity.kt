@@ -10,17 +10,24 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import com.dsaa.mygit.api.ApiService
 import com.dsaa.mygit.databinding.ActivityMainBinding
-
+import com.dsaa.mygit.module.ApiModule
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    @Inject
+    lateinit var Iservice:ApiService
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-
+        print(Iservice)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
