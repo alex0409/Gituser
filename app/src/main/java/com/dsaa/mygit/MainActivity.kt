@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var Iservice:ApiService
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
