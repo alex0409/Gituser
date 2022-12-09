@@ -6,10 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.dsaa.mygit.adapter.UserListAdapter
 import com.dsaa.mygit.databinding.FragmentFirstBinding
 import com.dsaa.mygit.viewmodel.FirstViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.FragmentScoped
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -23,12 +31,13 @@ class FirstFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private val viewModel = viewModels<FirstViewModel>()
+    @Inject
+    lateinit var adapter: UserListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel.value.getUserList()
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
 
@@ -37,9 +46,17 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+//        binding.buttonFirst.setOnClickListener {
+//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+//        }
+        binding.rvUser.layoutManager = LinearLayoutManager(context)
+        binding.rvUser.adapter = adapter
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.value.getUserList().collect{
+                adapter.submitData(it)
+            }
         }
+
     }
 
     override fun onDestroyView() {
