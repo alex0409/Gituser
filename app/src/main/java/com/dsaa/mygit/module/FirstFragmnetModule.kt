@@ -1,8 +1,5 @@
 package com.dsaa.mygit.module
 
-import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.dsaa.mygit.adapter.UserListAdapter
 import dagger.Module
 import dagger.Provides

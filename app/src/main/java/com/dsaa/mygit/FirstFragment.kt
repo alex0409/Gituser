@@ -9,8 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dsaa.mygit.Interface.IonClicked
 import com.dsaa.mygit.adapter.UserListAdapter
 import com.dsaa.mygit.databinding.FragmentFirstBinding
+import com.dsaa.mygit.model.UserListItem
 import com.dsaa.mygit.viewmodel.FirstViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.FragmentScoped
@@ -50,6 +52,12 @@ class FirstFragment : Fragment() {
 //            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
 //        }
         binding.rvUser.layoutManager = LinearLayoutManager(context)
+        adapter.onClicked = object : IonClicked {
+            override fun onclick(item: UserListItem?) {
+                    val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(item?.login)
+                findNavController().navigate(action)
+            }
+        }
         binding.rvUser.adapter = adapter
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.value.getUserList().collect{
