@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -35,6 +36,8 @@ class FirstFragment : Fragment() {
     private val viewModel = viewModels<FirstViewModel>()
     @Inject
     lateinit var adapter: UserListAdapter
+    @Inject
+    lateinit var layoutManager: Provider<LinearLayoutManager>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +54,10 @@ class FirstFragment : Fragment() {
 //        binding.buttonFirst.setOnClickListener {
 //            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
 //        }
-        binding.rvUser.layoutManager = LinearLayoutManager(context)
+
+        binding.rvUser.layoutManager = layoutManager.get()
+
+
         adapter.onClicked = object : IonClicked {
             override fun onclick(item: UserListItem?) {
                     val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(item?.login)
