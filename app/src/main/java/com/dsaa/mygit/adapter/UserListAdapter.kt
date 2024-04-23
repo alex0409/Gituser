@@ -6,11 +6,15 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dsaa.mygit.Interface.IonClicked
 import com.dsaa.mygit.databinding.ItemUserBinding
 import com.dsaa.mygit.model.UserListItem
+import java.nio.channels.spi.AbstractSelector
 import javax.inject.Inject
 
-class UserListAdapter : PagingDataAdapter<UserListItem, UserListAdapter.UserViewHolder>(COMPARATOR) {
+class UserListAdapter() : PagingDataAdapter<UserListItem, UserListAdapter.UserViewHolder>(COMPARATOR) {
+    var onClicked:IonClicked? = null
+
     companion object{
         private val COMPARATOR = object : DiffUtil.ItemCallback<UserListItem>(){
             override fun areItemsTheSame(oldItem: UserListItem, newItem: UserListItem): Boolean {
@@ -24,10 +28,8 @@ class UserListAdapter : PagingDataAdapter<UserListItem, UserListAdapter.UserView
         }
     }
 
-    class UserViewHolder(binding: ItemUserBinding):RecyclerView.ViewHolder(binding.root){
-        val m_binding = binding
 
-    }
+
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val item:UserListItem? = getItem(position)
@@ -38,11 +40,18 @@ class UserListAdapter : PagingDataAdapter<UserListItem, UserListAdapter.UserView
             .load(item?.avatarUrl)
             .centerCrop()
             .into(holder.m_binding.ivUser)
+        holder.m_binding.root.setOnClickListener {
+            onClicked?.onclick(item)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return UserViewHolder(ItemUserBinding.inflate(layoutInflater,parent,false))
+    }
+
+    class UserViewHolder(binding: ItemUserBinding):RecyclerView.ViewHolder(binding.root){
+        val m_binding:ItemUserBinding = binding
     }
 
 }

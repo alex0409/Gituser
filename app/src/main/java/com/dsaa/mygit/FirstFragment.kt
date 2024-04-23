@@ -9,8 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dsaa.mygit.Interface.IonClicked
 import com.dsaa.mygit.adapter.UserListAdapter
 import com.dsaa.mygit.databinding.FragmentFirstBinding
+import com.dsaa.mygit.model.UserListItem
 import com.dsaa.mygit.viewmodel.FirstViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.FragmentScoped
@@ -18,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -33,6 +36,8 @@ class FirstFragment : Fragment() {
     private val viewModel = viewModels<FirstViewModel>()
     @Inject
     lateinit var adapter: UserListAdapter
+    @Inject
+    lateinit var layoutManager: Provider<LinearLayoutManager>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +54,16 @@ class FirstFragment : Fragment() {
 //        binding.buttonFirst.setOnClickListener {
 //            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
 //        }
-        binding.rvUser.layoutManager = LinearLayoutManager(context)
+
+        binding.rvUser.layoutManager = layoutManager.get()
+
+
+        adapter.onClicked = object : IonClicked {
+            override fun onclick(item: UserListItem?) {
+                    val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(item?.login)
+                findNavController().navigate(action)
+            }
+        }
         binding.rvUser.adapter = adapter
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.value.getUserList().collect{
